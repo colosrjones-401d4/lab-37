@@ -8,16 +8,10 @@ export function reducer(state = initialState, action = {}) {
       return state.filter(item => item._id !== action.payload);
     case 'toggleComplete':
       return state.map(item => item._id === action.payload ? { ...item, complete: !item.complete, } : item);
-      case 'toggleDetails':
-        return {
-          details: action.payload || {},
-          showDetails: !!action.payload,
-        }
-      default:
-        return state;
-    } 
+    default:
+      return state;
   }
-
+}
 
 export function addItem(item) {
   return { 
@@ -39,9 +33,3 @@ export function toggleComplete(id) {
     payload: id,
   }
 }
-  export function toggleDetails(item) {
-    return {
-      type: 'toggleDetails',
-      payload: item,
-    }
-  }

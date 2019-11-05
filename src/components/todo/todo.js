@@ -1,30 +1,30 @@
 import React from 'react';
 import uuid from 'uuid/v4';
+import Form from 'react-jsonschema-form';
+import { connect } from 'react-redux';
+
 import { When } from '../if';
 import Modal from '../modal';
-import { connect } from 'react-redux';
-import { addItem, deleteItem, toggleComplete, toggleDetails } from '../../store/todoList/todoList-reducer';
+import schema from '../../schema.json';
 
+import { addItem, deleteItem, toggleComplete } from '../../store/todoList/todoList-reducer';
+import { toggleDetails } from '../../store/details/details-reducer';
+import { resetItem } from '../../store/item/item-reducer';
 
 import './todo.scss';
 
+const formUiSchema = {
+  _id: { 'ui:widget': 'hidden' },
+  __v: { 'ui:widget': 'hidden' },
+  complete: { 'ui:widget': 'hidden' },
+}
+
 function toDo(props) {
+  const { todoList, details, addItem, deleteItem, toggleComplete, toggleDetails, resetItem } = props;
 
-  const { todoList, details, item, addItem, deleteItem, toggleComplete, toggleDetails, modifyItem, resetItem } = props;
-
-  let handleInputChange = e => {
-    let { name, value } = e.target;
-
-    modifyItem(name, value);
-  };
-
-  let addNewItem = (e) => {
-
-    e.preventDefault();
-    e.target.reset();
-
-    const defaults = { _id: uuid(), complete:false };
-    const newItem = Object.assign({}, item, defaults);
+  let addNewItem = (submitData) => {
+    const defaults = { _id: uuid()};
+    const newItem = Object.assign({}, submitData.formData, defaults);
 
     addItem(newItem);
     resetItem();
@@ -35,8 +35,6 @@ function toDo(props) {
 
     toggleDetails(item);
   }
-
-  console.log(details);
 
   return (
     <>
@@ -52,29 +50,11 @@ function toDo(props) {
 
         <div>
           <h3>Add Item</h3>
-          <form onSubmit={addNewItem}>
-            <label>
-              <span>To Do Item</span>
-              <input
-                name="text"
-                placeholder="Add To Do List Item"
-                onChange={handleInputChange}
-              />
-            </label>
-            <label>
-              <span>Difficulty Rating</span>
-              <input type="range" min="1" max="5" name="difficulty" defaultValue="3" onChange={handleInputChange} />
-            </label>
-            <label>
-              <span>Assigned To</span>
-              <input type="text" name="assignee" placeholder="Assigned To" onChange={handleInputChange} />
-            </label>
-            <label>
-              <span>Due</span>
-              <input type="date" name="due" onChange={handleInputChange} />
-            </label>
-            <button>Add Item</button>
-          </form>
+          <Form 
+            schema={schema}
+            uiSchema={formUiSchema}
+            onSubmit={addNewItem}
+          />
         </div>
 
         <div>
@@ -117,11 +97,9 @@ function toDo(props) {
 }
 
 function mapStateToProps(state) {
-  console.log(state);
   return {
     todoList: state.todoList,
     details: state.details,
-    item: state.item,
   };
 }
 
@@ -131,6 +109,7 @@ function mapDispatchToProps(dispatch) {
     deleteItem: (id) => dispatch(deleteItem(id)),
     toggleComplete: (id) => dispatch(toggleComplete(id)),
     toggleDetails: (item) => dispatch(toggleDetails(item)),
+    resetItem: () => dispatch(resetItem()),
   }
 }
 
