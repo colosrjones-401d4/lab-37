@@ -1,7 +1,7 @@
 {
   "name": "class-31-starter-code-practice",
   "version": "1.0.0",
-  "description": "",
+  "description": "lab-37 Refactor the To Do application to use Redux and a form library",
   "keywords": [],
   "main": "src/index.js",
   "dependencies": {
@@ -33,5 +33,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/colosrjones-401d4/lab-37.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/colosrjones-401d4/lab-37/issues"
   }
 }
